@@ -11,3 +11,4 @@ This is a simple project to demonstrate greeting functionality.
 ```bash
 python app.py
 Ensure requirements.txt
+Falsk 2.12.1
