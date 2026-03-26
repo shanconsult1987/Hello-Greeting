@@ -10,3 +10,4 @@ This is a simple project to demonstrate greeting functionality.
 ## How to Run
 ```bash
 python app.py
+Ensure requirements.txt
