@@ -1,0 +1,15 @@
+repo:user/repo
+language:javascript
+stars:>100
+is:issue / is:pr
+user:username
+created:>2024
+
+hello greeting language:Python stars:>100
+ 
+user:shanconsult1987 Hello-Greeting
+ 
+repo:shanconsult1987/Hello-Greeting is:issue is: open label:bug
+ 
+password filename:.env
+ 
