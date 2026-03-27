@@ -1,0 +1,86 @@
+name: CodeQL Advanced Multi-Language Scan
+
+on:
+  push:
+    branches: [ "main", "feature-*" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 3 * * 1'   # Weekly scan (Monday 3 AM UTC)
+
+jobs:
+  analyze:
+    name: CodeQL (${{ matrix.language }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: javascript
+            build-mode: autobuild
+          - language: python
+            build-mode: manual
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+    # 1. Checkout code
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. Initialize CodeQL
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        queries: security-and-quality
+
+    # 3. Setup language-specific environments
+
+    ## Node.js setup (for JS)
+    - name: Setup Node.js
+      if: matrix.language == 'javascript'
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    ## Python setup
+    - name: Setup Python
+      if: matrix.language == 'python'
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    # 4. Install dependencies
+
+    - name: Install JS dependencies
+      if: matrix.language == 'javascript'
+      run: |
+        npm install || echo "No package.json found"
+
+    - name: Install Python dependencies
+      if: matrix.language == 'python'
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt || echo "No requirements.txt"
+
+    # 5. Build step (if needed)
+
+    - name: Autobuild (JS)
+      if: matrix.build-mode == 'autobuild'
+      uses: github/codeql-action/autobuild@v3
+
+    - name: Manual build (Python)
+      if: matrix.build-mode == 'manual'
+      run: |
+        echo "Python usually doesn't need build"
+
+    # 6. Perform analysis
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{ matrix.language }}"
