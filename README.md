@@ -1,6 +1,6 @@
 # Hello Greeting App 👋
 
-This is a simple project to demonstrate greeting functionality.
+This is a simple project to demonstrate greeting functionality. Sample Python App.
 
 ## Features
 - Generates greetings
